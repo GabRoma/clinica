@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Odontólogos</title>
+</head>
+<body>
+
+<h1>Listado de Odontólogos</h1>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Apellido</th>
+        <th>Matrícula</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="odontologo : ${odontologos}">
+        <td th:text="${odontologo.id}">1</td>
+        <td th:text="${odontologo.nombre}">Juan</td>
+        <td th:text="${odontologo.apellido}">Pérez</td>
+        <td th:text="${odontologo.matricula}">12345</td>
+    </tr>
+    </tbody>
+</table>
+
+<form action="#" th:action="@{/odontologos}" method="post">
+    <input type="text" name="nombre" placeholder="Nombre"/>
+    <input type="text" name="apellido" placeholder="Apellido"/>
+    <input type="text" name="matricula" placeholder="Matrícula"/>
+    <button type="submit">Guardar</button>
+</form>
+
+</body>
+</html>
