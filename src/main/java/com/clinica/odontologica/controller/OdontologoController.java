@@ -1,44 +1,50 @@
 package com.clinica.odontologica.controller;
 import com.clinica.odontologica.dto.OdontologoDTO;
-import com.clinica.odontologica.entity.Odontologo;
 import com.clinica.odontologica.service.OdontologoService;
-import com.clinica.odontologica.exception.ResourceNotFoundException;
+import com.clinica.odontologica.utils.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/odontologos")
+@Validated
 public class OdontologoController {
 
     @Autowired
     private OdontologoService odontologoService;
 
+    @Autowired
+    private Mapper mapper;
+
+    // Endpoint para listar odontólogos
     @GetMapping
-    public List<OdontologoDTO> listar() {
-        return odontologoService.listarOdontologos();
+    public ResponseEntity<List<OdontologoDTO>> listar() {
+        List<OdontologoDTO> odontologos = odontologoService.listarOdontologos();
+        return ResponseEntity.ok(odontologos);
     }
 
-    @PostMapping
-    public ResponseEntity<OdontologoDTO> agregar(@RequestBody Odontologo odontologo) {
-        return ResponseEntity.ok(odontologoService.guardarOdontologo(odontologo));
+//     Endpoint para agregar un odontólogo, validando el DTO
+    @PostMapping("/agregar")
+    public ResponseEntity<OdontologoDTO> agregar(@RequestBody OdontologoDTO odontologoDTO) {
+        OdontologoDTO nuevoOdontologo = odontologoService.guardarOdontologo(odontologoDTO);
+        return ResponseEntity.status(201).body(nuevoOdontologo);  // 201 Created
     }
 
-    @DeleteMapping("/{id}")
+    // Endpoint para obtener un odontólogo por su ID, con manejo de excepciones
+    @GetMapping("/buscar/{id}")
+    public ResponseEntity<OdontologoDTO> obtener(@PathVariable Long id) {
+        OdontologoDTO odontologo = odontologoService.obtenerOdontologo(id);
+        return ResponseEntity.ok(odontologo);  // 200 OK
+    }
+
+    // Endpoint para eliminar un odontólogo por su ID
+    @DeleteMapping("/eliminar/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
         odontologoService.eliminarOdontologo(id);
-        return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Optional<Odontologo>> obtener(@PathVariable Long id) throws ResourceNotFoundException{
-        Optional<Odontologo> odontologoBuscado = Optional.ofNullable(odontologoService.obtenerOdontologo(id));
-        if (odontologoBuscado.isPresent()){
-            return ResponseEntity.ok(odontologoBuscado);
-        }else{
-            throw new ResourceNotFoundException("Odontólogo no encontrado");
-        }
+        return ResponseEntity.noContent().build();  // 204 No Content
     }
 }

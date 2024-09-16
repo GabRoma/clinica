@@ -11,7 +11,6 @@ import java.util.Optional;
 public class UsuarioService implements UserDetailsService{
     @Autowired
     private UsuarioRepository usuarioRepository;
-
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException{
         Optional<Usuario> usuarioBuscado = usuarioRepository.findByEmail(username);
@@ -20,5 +19,8 @@ public class UsuarioService implements UserDetailsService{
         }else{
             throw new UsernameNotFoundException("No se ha logrado encontrar al usuario: " + username);
         }
+    }
+    public Usuario guardarUsuario(Usuario usuario) {
+        return usuarioRepository.save(usuario);
     }
 }
