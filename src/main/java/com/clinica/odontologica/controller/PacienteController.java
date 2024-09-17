@@ -1,4 +1,5 @@
 package com.clinica.odontologica.controller;
+
 import com.clinica.odontologica.dto.PacienteDTO;
 import com.clinica.odontologica.service.PacienteService;
 import com.clinica.odontologica.utils.Mapper;
@@ -20,14 +21,14 @@ public class PacienteController {
     @Autowired
     private Mapper mapper;
 
-    // Endpoint para listar pacientes con paginación
+    // Endpoint para listar pacientes
     @GetMapping
     public ResponseEntity<List<PacienteDTO>> listar(){
         List<PacienteDTO> pacientes = pacienteService.listarPacientes();
         return ResponseEntity.ok(pacientes);
     }
 
-    // Endpoint para agregar un paciente, validando el DTO
+    // Endpoint para agregar un paciente
     @PostMapping("/agregar")
     public ResponseEntity<PacienteDTO> agregar(@RequestBody PacienteDTO pacienteDTO) {
         PacienteDTO nuevoPaciente = pacienteService.guardarPaciente(pacienteDTO);

@@ -6,9 +6,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class ViewController {
 
+    @GetMapping("/")
+    public String index() {
+        return "index"; // Carga el archivo index.html en templates/
+    }
+
     @GetMapping("/home")
     public String home() {
-        return "index"; // Carga el archivo index.html en templates/
+        return "home"; // Carga home.html
     }
 
     @GetMapping("/login")

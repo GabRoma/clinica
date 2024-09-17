@@ -123,14 +123,30 @@ function cargarPacientes() {
 function agregarPaciente(e) {
     e.preventDefault();  // Prevenir el comportamiento por defecto del formulario
 
-    let nombre = document.getElementById('nombrePaciente').value;
-    let apellido = document.getElementById('apellidoPaciente').value;
-    let cedula = document.getElementById('cedulaPaciente').value;
+    console.log("AAAA")
+
+    let nombre = document.getElementById('nombre').value;
+    let apellido = document.getElementById('apellido').value;
+    let cedula = document.getElementById('cedula').value;
+    let email = document.getElementById('email').value;
+    let fechaIngreso = document.getElementById('fechaIngreso').value;
+    let calle = document.getElementById('calle').value;
+    let numero = document.getElementById('numero').value;
+    let localidad = document.getElementById('localidad').value;
+    let provincia = document.getElementById('provincia').value;
 
     let pacienteData = {
         nombre: nombre,
         apellido: apellido,
-        cedula: cedula
+        cedula: cedula,
+        email: email,
+        fechaIngreso: fechaIngreso,
+        domicilio: {
+            calle: calle,
+            numero: numero,
+            localidad: localidad,
+            provincia: provincia
+        }
     };
 
     fetch('/pacientes/agregar', {
@@ -150,8 +166,10 @@ function agregarPaciente(e) {
         .then(data => {
             alert('Paciente agregado exitosamente');
             document.getElementById('pacienteForm').reset();
-            location.reload();
             cargarPacientes();  // Recargar la lista de pacientes
+            const modal = bootstrap.Modal.getInstance(document.getElementById('pacienteModal'));
+            modal.hide();  // Cerrar el modal
+            location.reload();
         })
         .catch(error => console.error('Error al agregar paciente:', error));
 }

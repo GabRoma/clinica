@@ -1,5 +1,6 @@
 package com.clinica.odontologica.controller;
 import com.clinica.odontologica.dto.OdontologoDTO;
+import com.clinica.odontologica.entity.Odontologo;
 import com.clinica.odontologica.service.OdontologoService;
 import com.clinica.odontologica.utils.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
