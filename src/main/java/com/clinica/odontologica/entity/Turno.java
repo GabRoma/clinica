@@ -15,12 +15,12 @@ public class Turno {
     private Long id;
 
     @NotNull(message = "El paciente no puede ser nulo")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "paciente_id",referencedColumnName = "id")
     private Paciente paciente;
 
     @NotNull(message = "El odontólogo no puede ser nulo")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "odontologo_id",referencedColumnName = "id")
     private Odontologo odontologo;
 

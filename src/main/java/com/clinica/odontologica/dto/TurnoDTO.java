@@ -4,6 +4,8 @@ import lombok.Setter;
 import lombok.Data;
 import jakarta.validation.constraints.*;
 import java.time.LocalDateTime;
+import com.clinica.odontologica.dto.PacienteDTO;
+import com.clinica.odontologica.dto.OdontologoDTO;
 
 @Getter
 @Setter
@@ -15,9 +17,9 @@ public class TurnoDTO {
     @FutureOrPresent(message = "La fecha del turno debe ser hoy o una fecha futura")
     private LocalDateTime fechaHora;
 
-    @NotNull(message = "El ID del odontólogo no puede ser nulo")
-    private Long odontologoId;
+    @NotNull(message = "Se debe seleccionar un odontólogo")
+    private OdontologoDTO odontologo;
 
-    @NotNull(message = "El ID del paciente no puede ser nulo")
-    private Long pacienteId;
+    @NotNull(message = "Se debe seleccionar un paciente")
+    private PacienteDTO paciente;
 }

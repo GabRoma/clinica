@@ -36,10 +36,6 @@ public class OdontologoService {
         return mapper.odontologoToDto(odontologoGuardado);
     }
 
-//    public Odontologo guardarOdontologo(Odontologo odontologo) {
-//        return (odontologoRepository.save(odontologo));
-//    }
-
     // Obtener un odontólogo por su ID
     public OdontologoDTO obtenerOdontologo(Long id) {
         Odontologo odontologo = odontologoRepository.findById(id)

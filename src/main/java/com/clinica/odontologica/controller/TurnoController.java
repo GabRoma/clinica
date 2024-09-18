@@ -1,20 +1,16 @@
 package com.clinica.odontologica.controller;
-import com.clinica.odontologica.dto.OdontologoDTO;
 import com.clinica.odontologica.dto.TurnoDTO;
 import com.clinica.odontologica.entity.Paciente;
 import com.clinica.odontologica.entity.Odontologo;
+import com.clinica.odontologica.entity.Turno;
 import com.clinica.odontologica.service.TurnoService;
 import com.clinica.odontologica.service.OdontologoService;
 import com.clinica.odontologica.service.PacienteService;
 import com.clinica.odontologica.utils.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -41,11 +37,11 @@ public class TurnoController {
         return ResponseEntity.ok(turnos);
     }
 
-    // Endpoint para agregar un turno, validando la existencia del odontólogo y paciente
+    // Endpoint para agregar un turno
     @PostMapping("/agregar")
     public ResponseEntity<TurnoDTO> agregar(@RequestBody TurnoDTO turnoDTO) {
-        Paciente paciente = pacienteService.obtenerEntidadPaciente(turnoDTO.getPacienteId());
-        Odontologo odontologo = odontologoService.obtenerEntidadOdontologo(turnoDTO.getOdontologoId());
+        Paciente paciente = pacienteService.obtenerEntidadPaciente(turnoDTO.getPaciente().getId());
+        Odontologo odontologo = odontologoService.obtenerEntidadOdontologo(turnoDTO.getOdontologo().getId());
         if (paciente != null && odontologo != null) {
             TurnoDTO nuevoTurno = turnoService.guardarTurno(turnoDTO, paciente, odontologo);
             return ResponseEntity.status(201).body(nuevoTurno);  // 201 Created
@@ -54,7 +50,7 @@ public class TurnoController {
         }
     }
 
-    // Endpoint para obtener un turno por su ID, con manejo de excepciones
+    // Endpoint para obtener un turno por su ID
     @GetMapping("/eliminar/{id}")
     public ResponseEntity<TurnoDTO> obtener(@PathVariable Long id) {
         TurnoDTO turno = turnoService.obtenerTurno(id);

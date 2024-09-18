@@ -7,7 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
-<body>
+<body data-vista="pacientes">
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container-fluid">
@@ -20,13 +20,13 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/">Inicio</a>
+                    <a class="nav-link" href="/home">Inicio</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/view/odontologos">Odontólogos</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/view/pacientes">Pacientes</a>
+                    <a class="nav-link active" aria-current="page" href="/view/pacientes">Pacientes</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/view/turnos">Turnos</a>
@@ -70,7 +70,6 @@
                 </div>
                 <div class="modal-body">
                     <form id="pacienteForm">
-                        <!-- Información del Paciente -->
                         <div class="mb-3">
                             <label for="nombre" class="form-label">Nombre</label>
                             <input type="text" class="form-control" id="nombre" name="nombre" required>
@@ -91,24 +90,23 @@
                             <label for="fechaIngreso" class="form-label">Fecha de Ingreso</label>
                             <input type="date" class="form-control" id="fechaIngreso" name="fechaIngreso" required>
                         </div>
-                        <!-- Información del Domicilio -->
                         <div class="mb-3">
                             <label for="calle" class="form-label">Calle</label>
-                            <input type="text" class="form-control" id="calle" name="domicilio.calle" required>
+                            <input type="text" class="form-control" id="calle" name="calle" required>
                         </div>
                         <div class="mb-3">
                             <label for="numero" class="form-label">Número</label>
-                            <input type="text" class="form-control" id="numero" name="domicilio.numero" required>
+                            <input type="text" class="form-control" id="numero" name="numero" required>
                         </div>
                         <div class="mb-3">
                             <label for="localidad" class="form-label">Localidad</label>
-                            <input type="text" class="form-control" id="localidad" name="domicilio.localidad" required>
+                            <input type="text" class="form-control" id="localidad" name="localidad" required>
                         </div>
                         <div class="mb-3">
                             <label for="provincia" class="form-label">Provincia</label>
-                            <input type="text" class="form-control" id="provincia" name="domicilio.provincia" required>
+                            <input type="text" class="form-control" id="provincia" name="provincia" required>
                         </div>
-                        <button type="submit" class="btn btn-primary w-100">Agregar Paciente</button>
+                        <button type="submit" class="btn btn-primary w-100">Guardar</button>
                     </form>
                 </div>
             </div>

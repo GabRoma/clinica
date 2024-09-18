@@ -17,3 +17,12 @@ h2 {
 .btn {
     margin-top: 10px;
 }
+
+.custom-height {
+    height: 80vh;
+}
+
+.carousel-item img{
+    height: 80vh;
+    object-fit: cover;
+}

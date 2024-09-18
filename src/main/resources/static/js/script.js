@@ -1,24 +1,32 @@
-// Ejecutar cuando el DOM esté cargado
+// ==========================================================================================
+// Bienvenido al JS! En la creación de este script se derramaron mares de lágrimas :D
+// ==========================================================================================
 document.addEventListener("DOMContentLoaded", function () {
-    cargarOdontologos();
-    cargarPacientes();
-    cargarTurnos();
+    const vista = document.body.getAttribute('data-vista');
 
-    // Event listeners para formularios
-    document.getElementById('odontologoForm').addEventListener('submit', agregarOdontologo);
-    document.getElementById('pacienteForm').addEventListener('submit', agregarPaciente);
-    document.getElementById('turnoForm').addEventListener('submit', asignarTurno);
+    if (vista === 'odontologos') {
+        cargarOdontologos();
+        document.getElementById('odontologoForm').addEventListener('submit', agregarOdontologo);
+    } else if (vista === 'pacientes') {
+        cargarPacientes();
+        document.getElementById('pacienteForm').addEventListener('submit', agregarPaciente);
+    } else if (vista === 'turnos') {
+        cargarTurnos();
+        cargarPacientesEnSelect();
+        cargarOdontologosEnSelect();
+        document.getElementById('turnoForm').addEventListener('submit', asignarTurno);
+    }
 });
 
 // =============================================
 // Cargar Odontólogos
 // =============================================
 function cargarOdontologos() {
-    fetch('/odontologos')  // Llamada al endpoint GET de odontólogos
-        .then(response => response.json())  // Convertir la respuesta a JSON
+    fetch('/odontologos')
+        .then(response => response.json())
         .then(data => {
             let tbody = document.getElementById('odontologosTableBody');
-            tbody.innerHTML = '';  // Limpiar el contenido previo
+            tbody.innerHTML = '';
             data.forEach(odontologo => {
                 let row = `<tr>
                         <td>${odontologo.id}</td>
@@ -27,7 +35,7 @@ function cargarOdontologos() {
                         <td>${odontologo.matricula}</td>
                         <td><button class="btn btn-danger btn-sm" onclick="eliminarOdontologo(${odontologo.id})">Eliminar</button></td>
                        </tr>`;
-                tbody.innerHTML += row;  // Agregar cada odontólogo a la tabla
+                tbody.innerHTML += row;
             });
         })
         .catch(error => console.error('Error al cargar odontólogos:', error));
@@ -37,7 +45,7 @@ function cargarOdontologos() {
 // Agregar Odontólogo
 // =============================================
 function agregarOdontologo(e) {
-    e.preventDefault();  // Prevenir el comportamiento por defecto del formulario
+    e.preventDefault();
 
     let nombre = document.getElementById('nombre').value;
     let apellido = document.getElementById('apellido').value;
@@ -50,25 +58,25 @@ function agregarOdontologo(e) {
     };
 
     fetch('/odontologos/agregar', {
-        method: 'POST',  // Método POST
+        method: 'POST',
         headers: {
-            'Content-Type': 'application/json'  // Especificar que los datos se envían como JSON
+            'Content-Type': 'application/json'
         },
-        body: JSON.stringify(odontologoData)  // Convertir los datos a formato JSON
+        body: JSON.stringify(odontologoData)
     })
         .then(response => {
             if (response.ok) {
-                return response.json();  // Convertir la respuesta a JSON si es correcta
+                return response.json();
             } else {
                 throw new Error('Error al agregar odontólogo');
             }
         })
         .then(data => {
             alert('Odontólogo agregado exitosamente');
-            document.getElementById('odontologoForm').reset();  // Limpiar el formulario
-            cargarOdontologos();  // Recargar la lista de odontólogos
+            document.getElementById('odontologoForm').reset();
+            cargarOdontologos();
             const modal = bootstrap.Modal.getInstance(document.getElementById('odontologoModal'));
-            modal.hide();  // Cerrar el modal
+            modal.hide();
             location.reload();
         })
         .catch(error => console.error('Error al agregar odontólogo:', error));
@@ -85,7 +93,7 @@ function eliminarOdontologo(id) {
             .then(response => {
                 if (response.ok) {
                     alert('Odontólogo eliminado exitosamente');
-                    cargarOdontologos();  // Recargar la lista de odontólogos
+                    cargarOdontologos();
                 } else {
                     throw new Error('Error al eliminar odontólogo');
                 }
@@ -98,11 +106,11 @@ function eliminarOdontologo(id) {
 // Cargar Pacientes
 // =============================================
 function cargarPacientes() {
-    fetch('/pacientes')  // Llamada al endpoint GET de pacientes
-        .then(response => response.json())  // Convertir la respuesta a JSON
+    fetch('/pacientes')
+        .then(response => response.json())
         .then(data => {
             let tbody = document.getElementById('pacientesTableBody');
-            tbody.innerHTML = '';  // Limpiar el contenido previo
+            tbody.innerHTML = '';
             data.forEach(paciente => {
                 let row = `<tr>
                         <td>${paciente.id}</td>
@@ -111,7 +119,7 @@ function cargarPacientes() {
                         <td>${paciente.cedula}</td>
                         <td><button class="btn btn-danger btn-sm" onclick="eliminarPaciente(${paciente.id})">Eliminar</button></td>
                        </tr>`;
-                tbody.innerHTML += row;  // Agregar cada paciente a la tabla
+                tbody.innerHTML += row;
             });
         })
         .catch(error => console.error('Error al cargar pacientes:', error));
@@ -121,9 +129,7 @@ function cargarPacientes() {
 // Agregar Paciente
 // =============================================
 function agregarPaciente(e) {
-    e.preventDefault();  // Prevenir el comportamiento por defecto del formulario
-
-    console.log("AAAA")
+    e.preventDefault();
 
     let nombre = document.getElementById('nombre').value;
     let apellido = document.getElementById('apellido').value;
@@ -166,9 +172,9 @@ function agregarPaciente(e) {
         .then(data => {
             alert('Paciente agregado exitosamente');
             document.getElementById('pacienteForm').reset();
-            cargarPacientes();  // Recargar la lista de pacientes
+            cargarPacientes();
             const modal = bootstrap.Modal.getInstance(document.getElementById('pacienteModal'));
-            modal.hide();  // Cerrar el modal
+            modal.hide();
             location.reload();
         })
         .catch(error => console.error('Error al agregar paciente:', error));
@@ -197,12 +203,43 @@ function eliminarPaciente(id) {
 // =============================================
 // Cargar Turnos
 // =============================================
+
+function cargarPacientesEnSelect() {
+    fetch('/pacientes')
+        .then(response => response.json())
+        .then(data => {
+            let pacienteSelect = document.getElementById('pacienteId');
+            data.forEach(paciente => {
+                let option = document.createElement('option');
+                option.value = paciente.id;
+                option.text = `${paciente.nombre} ${paciente.apellido}`;
+                pacienteSelect.appendChild(option);
+            });
+        })
+        .catch(error => console.error('Error al cargar pacientes:', error));
+}
+
+function cargarOdontologosEnSelect() {
+    fetch('/odontologos')
+        .then(response => response.json())
+        .then(data => {
+            let odontologoSelect = document.getElementById('odontologoId');
+            data.forEach(odontologo => {
+                let option = document.createElement('option');
+                option.value = odontologo.id;
+                option.text = `${odontologo.nombre} ${odontologo.apellido}`;
+                odontologoSelect.appendChild(option);
+            });
+        })
+        .catch(error => console.error('Error al cargar odontólogos:', error));
+}
+
 function cargarTurnos() {
-    fetch('/turnos')  // Llamada al endpoint GET de turnos
-        .then(response => response.json())  // Convertir la respuesta a JSON
+    fetch('/turnos')
+        .then(response => response.json())
         .then(data => {
             let tbody = document.getElementById('turnosTableBody');
-            tbody.innerHTML = '';  // Limpiar el contenido previo
+            tbody.innerHTML = '';
             data.forEach(turno => {
                 let row = `<tr>
                         <td>${turno.id}</td>
@@ -211,7 +248,7 @@ function cargarTurnos() {
                         <td>${new Date(turno.fechaHora).toLocaleString()}</td>
                         <td><button class="btn btn-danger btn-sm" onclick="eliminarTurno(${turno.id})">Eliminar</button></td>
                        </tr>`;
-                tbody.innerHTML += row;  // Agregar cada turno a la tabla
+                tbody.innerHTML += row;
             });
         })
         .catch(error => console.error('Error al cargar turnos:', error));
@@ -228,9 +265,9 @@ function asignarTurno(e) {
     let fechaHora = document.getElementById('fechaHora').value;
 
     let turnoData = {
-        pacienteId: pacienteId,
-        odontologoId: odontologoId,
-        fechaHora: fechaHora
+        fechaHora: fechaHora,
+        paciente: { id: pacienteId },
+        odontologo: { id: odontologoId }
     };
 
     fetch('/turnos/agregar', {
@@ -250,7 +287,8 @@ function asignarTurno(e) {
         .then(data => {
             alert('Turno asignado exitosamente');
             document.getElementById('turnoForm').reset();
-            cargarTurnos();  // Recargar la lista de turnos
+            cargarTurnos();
+            location.reload();
         })
         .catch(error => console.error('Error al asignar turno:', error));
 }
@@ -266,7 +304,7 @@ function eliminarTurno(id) {
             .then(response => {
                 if (response.ok) {
                     alert('Turno eliminado exitosamente');
-                    cargarTurnos();  // Recargar la lista de turnos
+                    cargarTurnos();
                 } else {
                     throw new Error('Error al eliminar turno');
                 }
@@ -274,8 +312,12 @@ function eliminarTurno(id) {
             .catch(error => console.error('Error al eliminar turno:', error));
     }
 }
+
+// =============================================
+// Registrar Usuario
+// =============================================
 document.getElementById('usuarioForm').addEventListener('submit', function(e) {
-    e.preventDefault();  // Prevenir el comportamiento por defecto del formulario
+    e.preventDefault();
 
     let nombre = document.getElementById('nombre').value;
     let username = document.getElementById('username').value;
@@ -292,22 +334,22 @@ document.getElementById('usuarioForm').addEventListener('submit', function(e) {
     };
 
     fetch('/usuarios/agregar', {
-        method: 'POST',  // Método POST para agregar un nuevo usuario
+        method: 'POST',
         headers: {
-            'Content-Type': 'application/json'  // Especificar que los datos se envían como JSON
+            'Content-Type': 'application/json'
         },
-        body: JSON.stringify(usuarioData)  // Convertir los datos a formato JSON
+        body: JSON.stringify(usuarioData)
     })
         .then(response => {
             if (response.ok) {
-                return response.json();  // Convertir la respuesta a JSON si es correcta
+                return response.json();
             } else {
                 throw new Error('Error al registrar usuario');
             }
         })
         .then(data => {
             alert('Usuario registrado exitosamente');
-            document.getElementById('usuarioForm').reset();  // Limpiar el formulario
+            document.getElementById('usuarioForm').reset();
         })
         .catch(error => console.error('Error al registrar usuario:', error));
 });

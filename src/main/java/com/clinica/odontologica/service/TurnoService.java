@@ -11,8 +11,8 @@ import com.clinica.odontologica.utils.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TurnoService {
@@ -24,13 +24,12 @@ public class TurnoService {
     private Mapper mapper;
 
     // Listar turnos
+
     public List<TurnoDTO> listarTurnos() {
         List<Turno> turnos = turnoRepository.findAll();
-        List<TurnoDTO> listaDTO = new ArrayList<>();
-        for (Turno turno : turnos){
-            listaDTO.add(mapper.turnoToDTO(turno));
-        }
-        return listaDTO;
+        return turnos.stream()
+                .map(turno -> mapper.turnoToDTO(turno))
+                .collect(Collectors.toList());
     }
 
     // Guardar un turno

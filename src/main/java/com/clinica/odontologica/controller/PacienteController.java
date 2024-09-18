@@ -35,7 +35,7 @@ public class PacienteController {
         return ResponseEntity.status(201).body(nuevoPaciente);  // 201 Created
     }
 
-    // Endpoint para obtener un paciente por su ID, con manejo de excepciones
+    // Endpoint para obtener un paciente por su ID
     @GetMapping("/buscar/{id}")
     public ResponseEntity<PacienteDTO> obtener(@PathVariable Long id) {
         PacienteDTO paciente = pacienteService.obtenerPaciente(id);

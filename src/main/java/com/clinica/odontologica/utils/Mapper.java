@@ -59,9 +59,10 @@ public class Mapper {
     public TurnoDTO turnoToDTO(Turno turno) {
         TurnoDTO dto = new TurnoDTO();
         dto.setId(turno.getId());
-        dto.setOdontologoId(turno.getOdontologo().getId());
-        dto.setPacienteId(turno.getPaciente().getId());
         dto.setFechaHora(turno.getFechaHora());
+        dto.setPaciente(pacienteToDto(turno.getPaciente()));
+        dto.setOdontologo(odontologoToDto(turno.getOdontologo()));
+
         return dto;
     }
 
@@ -69,6 +70,11 @@ public class Mapper {
         Turno turno = new Turno();
         turno.setId(dto.getId());
         turno.setFechaHora(dto.getFechaHora());
+        turno.setPaciente(dtoToPaciente(dto.getPaciente()));
+        turno.setOdontologo(dtoToOdontologo(dto.getOdontologo()));
+
         return turno;
     }
+
+
 }

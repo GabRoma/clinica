@@ -1,6 +1,5 @@
 package com.clinica.odontologica.controller;
 import com.clinica.odontologica.dto.OdontologoDTO;
-import com.clinica.odontologica.entity.Odontologo;
 import com.clinica.odontologica.service.OdontologoService;
 import com.clinica.odontologica.utils.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,14 +27,14 @@ public class OdontologoController {
         return ResponseEntity.ok(odontologos);
     }
 
-//     Endpoint para agregar un odontólogo, validando el DTO
+//     Endpoint para agregar un odontólogo
     @PostMapping("/agregar")
     public ResponseEntity<OdontologoDTO> agregar(@RequestBody OdontologoDTO odontologoDTO) {
         OdontologoDTO nuevoOdontologo = odontologoService.guardarOdontologo(odontologoDTO);
         return ResponseEntity.status(201).body(nuevoOdontologo);  // 201 Created
     }
 
-    // Endpoint para obtener un odontólogo por su ID, con manejo de excepciones
+    // Endpoint para obtener un odontólogo por su ID
     @GetMapping("/buscar/{id}")
     public ResponseEntity<OdontologoDTO> obtener(@PathVariable Long id) {
         OdontologoDTO odontologo = odontologoService.obtenerOdontologo(id);
