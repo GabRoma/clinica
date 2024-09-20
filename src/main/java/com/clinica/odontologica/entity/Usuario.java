@@ -23,16 +23,16 @@ public class Usuario implements UserDetails {
     @Column
     private String nombre;
     @Column(unique = true, nullable = false)
-    private String userName;
+    private String username;
     @Column(unique = true, nullable = false)
-    private String password; //admin
+    private String password;
     @Column(unique = true, nullable = false)
     private String email;
     private UsuarioRol usuarioRol;
 
-    public Usuario(String nombre, String userName, String password, String email, UsuarioRol usuarioRol) {
+    public Usuario(String nombre, String username, String password, String email, UsuarioRol usuarioRol) {
         this.nombre = nombre;
-        this.userName = userName;
+        this.username = username;
         this.password = password;
         this.email = email;
         this.usuarioRol = usuarioRol;

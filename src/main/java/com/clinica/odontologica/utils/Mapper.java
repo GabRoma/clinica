@@ -3,9 +3,11 @@ package com.clinica.odontologica.utils;
 import com.clinica.odontologica.dto.OdontologoDTO;
 import com.clinica.odontologica.dto.PacienteDTO;
 import com.clinica.odontologica.dto.TurnoDTO;
+import com.clinica.odontologica.dto.UsuarioDTO;
 import com.clinica.odontologica.entity.Odontologo;
 import com.clinica.odontologica.entity.Paciente;
 import com.clinica.odontologica.entity.Turno;
+import com.clinica.odontologica.entity.Usuario;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -76,5 +78,26 @@ public class Mapper {
         return turno;
     }
 
+    // Usuario
+    public UsuarioDTO usuarioToDto(Usuario usuario) {
+        UsuarioDTO dto = new UsuarioDTO();
+        dto.setId(usuario.getId());
+        dto.setNombre(usuario.getNombre());
+        dto.setUsername(usuario.getUsername());
+        dto.setEmail(usuario.getEmail());
+        dto.setUsuarioRol(usuario.getUsuarioRol());
+        return dto;
+    }
+
+    public Usuario dtoToUsuario(UsuarioDTO dto) {
+        Usuario usuario = new Usuario();
+        usuario.setId(dto.getId());
+        usuario.setNombre(dto.getNombre());
+        usuario.setUsername(dto.getUsername());
+        usuario.setPassword(dto.getPassword());
+        usuario.setEmail(dto.getEmail());
+        usuario.setUsuarioRol(dto.getUsuarioRol());
+        return usuario;
+    }
 
 }

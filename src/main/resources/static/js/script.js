@@ -1,28 +1,85 @@
 // ==========================================================================================
 // Bienvenido al JS! En la creación de este script se derramaron mares de lágrimas :D
 // ==========================================================================================
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", async function () {
+    const token = localStorage.getItem('jwtToken');
+    console.log(token);
+
     const vista = document.body.getAttribute('data-vista');
 
-    if (vista === 'odontologos') {
-        cargarOdontologos();
-        document.getElementById('odontologoForm').addEventListener('submit', agregarOdontologo);
-    } else if (vista === 'pacientes') {
-        cargarPacientes();
-        document.getElementById('pacienteForm').addEventListener('submit', agregarPaciente);
-    } else if (vista === 'turnos') {
-        cargarTurnos();
-        cargarPacientesEnSelect();
-        cargarOdontologosEnSelect();
-        document.getElementById('turnoForm').addEventListener('submit', asignarTurno);
+    try {
+        switch (vista) {
+            case 'home':
+                await fetchProtectedResource('/home');
+                break;
+
+            case 'registrar':
+                document.getElementById('usuarioForm').addEventListener('submit', registrarUsuario);
+                break;
+
+            case 'login':
+                document.getElementById('loginForm').addEventListener('submit', iniciarSesion);
+                break;
+
+            case 'odontologos':
+                await fetchProtectedResource('/view/odontologos');
+                cargarOdontologos();
+                document.getElementById('odontologoForm').addEventListener('submit', agregarOdontologo);
+                break;
+
+            case 'pacientes':
+                await fetchProtectedResource('/view/pacientes');
+                cargarPacientes();
+                document.getElementById('pacienteForm').addEventListener('submit', agregarPaciente);
+                break;
+
+            case 'turnos':
+                await fetchProtectedResource('/view/turnos');
+                cargarTurnos();
+                cargarPacientesEnSelect();
+                cargarOdontologosEnSelect();
+                document.getElementById('turnoForm').addEventListener('submit', asignarTurno);
+                break;
+
+            default:
+                console.log("Vista no reconocida");
+                break;
+        }
+    } catch (error) {
+        console.error('Error al cargar la vista:', error);
     }
 });
+
+function fetchWithToken(url, options = {}) {
+    const token = localStorage.getItem('jwtToken');
+    if (!token) {
+        window.location.href = '/login';
+        return Promise.reject("No JWT token found");
+    }
+
+    if (!options.headers) {
+        options.headers = {};
+    }
+
+    options.headers['Authorization'] = 'Bearer ' + token;
+
+    return fetch(url, options)
+        .then(response => {
+            if (response.status === 401 || response.status === 403) {
+                localStorage.removeItem('jwtToken');
+                window.location.href = '/login';
+                return Promise.reject("Unauthorized");
+            }
+            return response;
+        });
+}
+
 
 // =============================================
 // Cargar Odontólogos
 // =============================================
 function cargarOdontologos() {
-    fetch('/odontologos')
+    fetchWithToken('/odontologos')
         .then(response => response.json())
         .then(data => {
             let tbody = document.getElementById('odontologosTableBody');
@@ -57,7 +114,7 @@ function agregarOdontologo(e) {
         matricula: matricula
     };
 
-    fetch('/odontologos/agregar', {
+    fetchWithToken('/odontologos/agregar', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -77,7 +134,6 @@ function agregarOdontologo(e) {
             cargarOdontologos();
             const modal = bootstrap.Modal.getInstance(document.getElementById('odontologoModal'));
             modal.hide();
-            location.reload();
         })
         .catch(error => console.error('Error al agregar odontólogo:', error));
 }
@@ -87,7 +143,7 @@ function agregarOdontologo(e) {
 // =============================================
 function eliminarOdontologo(id) {
     if (confirm('¿Estás seguro de que quieres eliminar este odontólogo?')) {
-        fetch(`/odontologos/eliminar/${id}`, {
+        fetchWithToken(`/odontologos/eliminar/${id}`, {
             method: 'DELETE'
         })
             .then(response => {
@@ -106,7 +162,7 @@ function eliminarOdontologo(id) {
 // Cargar Pacientes
 // =============================================
 function cargarPacientes() {
-    fetch('/pacientes')
+    fetchWithToken('/pacientes')
         .then(response => response.json())
         .then(data => {
             let tbody = document.getElementById('pacientesTableBody');
@@ -155,7 +211,7 @@ function agregarPaciente(e) {
         }
     };
 
-    fetch('/pacientes/agregar', {
+    fetchWithToken('/pacientes/agregar', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -175,7 +231,6 @@ function agregarPaciente(e) {
             cargarPacientes();
             const modal = bootstrap.Modal.getInstance(document.getElementById('pacienteModal'));
             modal.hide();
-            location.reload();
         })
         .catch(error => console.error('Error al agregar paciente:', error));
 }
@@ -185,7 +240,7 @@ function agregarPaciente(e) {
 // =============================================
 function eliminarPaciente(id) {
     if (confirm('¿Estás seguro de que quieres eliminar este paciente?')) {
-        fetch(`/pacientes/eliminar/${id}`, {
+        fetchWithToken(`/pacientes/eliminar/${id}`, {
             method: 'DELETE'
         })
             .then(response => {
@@ -205,7 +260,7 @@ function eliminarPaciente(id) {
 // =============================================
 
 function cargarPacientesEnSelect() {
-    fetch('/pacientes')
+    fetchWithToken('/pacientes')
         .then(response => response.json())
         .then(data => {
             let pacienteSelect = document.getElementById('pacienteId');
@@ -220,7 +275,7 @@ function cargarPacientesEnSelect() {
 }
 
 function cargarOdontologosEnSelect() {
-    fetch('/odontologos')
+    fetchWithToken('/odontologos')
         .then(response => response.json())
         .then(data => {
             let odontologoSelect = document.getElementById('odontologoId');
@@ -235,7 +290,7 @@ function cargarOdontologosEnSelect() {
 }
 
 function cargarTurnos() {
-    fetch('/turnos')
+    fetchWithToken('/turnos')
         .then(response => response.json())
         .then(data => {
             let tbody = document.getElementById('turnosTableBody');
@@ -270,7 +325,7 @@ function asignarTurno(e) {
         odontologo: { id: odontologoId }
     };
 
-    fetch('/turnos/agregar', {
+    fetchWithToken('/turnos/agregar', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -288,7 +343,6 @@ function asignarTurno(e) {
             alert('Turno asignado exitosamente');
             document.getElementById('turnoForm').reset();
             cargarTurnos();
-            location.reload();
         })
         .catch(error => console.error('Error al asignar turno:', error));
 }
@@ -298,7 +352,7 @@ function asignarTurno(e) {
 // =============================================
 function eliminarTurno(id) {
     if (confirm('¿Estás seguro de que quieres eliminar este turno?')) {
-        fetch(`/turnos/eliminar/${id}`, {
+        fetchWithToken(`/turnos/eliminar/${id}`, {
             method: 'DELETE'
         })
             .then(response => {
@@ -316,7 +370,7 @@ function eliminarTurno(id) {
 // =============================================
 // Registrar Usuario
 // =============================================
-document.getElementById('usuarioForm').addEventListener('submit', function(e) {
+function registrarUsuario(e) {
     e.preventDefault();
 
     let nombre = document.getElementById('nombre').value;
@@ -327,13 +381,13 @@ document.getElementById('usuarioForm').addEventListener('submit', function(e) {
 
     let usuarioData = {
         nombre: nombre,
-        userName: username,
+        username: username,
         email: email,
         password: password,
         usuarioRol: usuarioRol
     };
 
-    fetch('/usuarios/agregar', {
+    fetch('/usuarios/registrar', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -350,7 +404,96 @@ document.getElementById('usuarioForm').addEventListener('submit', function(e) {
         .then(data => {
             alert('Usuario registrado exitosamente');
             document.getElementById('usuarioForm').reset();
+            window.location.href = '/login';
         })
         .catch(error => console.error('Error al registrar usuario:', error));
-});
+}
 
+// =============================================
+// Iniciar Sesión
+// =============================================
+function iniciarSesion(e){
+    e.preventDefault();
+
+    let email = document.getElementById('email').value;
+    let password = document.getElementById('password').value;
+
+    let loginData = {
+        username: email,
+        password: password
+    };
+
+    let existingToken = localStorage.getItem('jwtToken');
+    if (existingToken) {
+        // Si existe, eliminarlo
+        console.log("Eliminando el JWT existente.");
+        localStorage.removeItem('jwtToken');
+    }
+
+    fetch('/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(loginData)
+    })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Login failed');
+            }
+        })
+        .then(data => {
+            localStorage.setItem('jwtToken', data.jwt);
+            console.log("HEY! JWT Token: ", data.jwt);
+            alert("Bienvenido");
+            window.location.href = '/home';
+        })
+        .catch(error => {
+            document.getElementById('errorMessage').textContent = "Email o contraseña incorrectos";
+            console.error('Error al iniciar sesión:', error);
+        })
+}
+
+// =============================================
+// Fetch con Token JWT
+// =============================================
+
+function getJwtToken() {
+    return localStorage.getItem('jwtToken');
+}
+
+// Función para hacer una solicitud a una ruta protegida
+async function fetchProtectedResource(url, options = {}) {
+    const token = localStorage.getItem('jwtToken');
+    if (!token) {
+        window.location.href = '/login';
+        return Promise.reject("No token found");
+    }
+
+    if (!options.headers) {
+        options.headers = {};
+    }
+
+    options.headers['Authorization'] = 'Bearer ' + token;
+
+    return fetch(url, options)
+        .then(response => {
+            if (response.status === 401 || response.status === 403) {
+                localStorage.removeItem('jwtToken');
+                window.location.href = '/login';
+                return Promise.reject("Unauthorized");
+            }
+            return response;
+        });
+}
+
+// =============================================
+// Cerrar Sesión
+// =============================================
+
+function logout(){
+    localStorage.removeItem('jwtToken');
+    window.location.href = '/login';
+}
