@@ -38,9 +38,10 @@ public class AuthController {
         // Cargar los detalles del usuario autenticado
         final UserDetails userDetails = usuarioService.loadUserByUsername(authenticationRequest.getUsername());
         final String role = userDetails.getAuthorities().iterator().next().getAuthority();  // Extraer el rol del usuario
+        System.out.println("El rol es: " + role);
 
         // Generar el token JWT con el username y el rol
-        final String jwt = jwtUtil.generateToken(userDetails.getUsername(), role);
+        final String jwt = jwtUtil.generateToken(userDetails);
 
         // Retornar el token en la respuesta
         return ResponseEntity.ok(new AuthenticationResponse(jwt));

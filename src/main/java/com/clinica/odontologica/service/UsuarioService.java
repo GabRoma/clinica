@@ -34,7 +34,7 @@ public class UsuarioService implements UserDetailsService{
             String rol = (usuario.getUsuarioRol()).toString();
 
             GrantedAuthority authority = new SimpleGrantedAuthority(rol);
-            System.out.println(authority);
+            System.out.println("La authority es: " + authority);
             return new User(
                     usuario.getEmail(),
                     usuario.getPassword(),
