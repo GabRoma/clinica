@@ -2,6 +2,11 @@ package com.clinica.odontologica.dto;
 import com.clinica.odontologica.entity.UsuarioRol;
 import jakarta.validation.constraints.*;
 import lombok.Data;
+/**
+ * La clase `UsuarioDTO` es un Data Transfer Object (DTO) que representa la información de un usuario.
+ * Esta clase se utiliza para transferir datos entre las capas de la aplicación.
+ * Incluye validaciones para asegurar que los datos sean correctos antes de ser procesados.
+ */
 @Data
 public class UsuarioDTO {
     private Long id;

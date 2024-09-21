@@ -1,6 +1,11 @@
 package com.clinica.odontologica.entity;
 import lombok.*;
 import jakarta.persistence.*;
+/**
+ * La clase `Domicilio` representa la entidad de un domicilio en la base de datos.
+ * Utiliza anotaciones de JPA para mapear sus campos a una tabla de la base de datos.
+ * Incluye atributos como calle, número, localidad y provincia.
+ */
 @Getter
 @Setter
 @AllArgsConstructor

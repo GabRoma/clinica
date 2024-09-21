@@ -2,6 +2,10 @@ package com.clinica.odontologica.dto;
 import lombok.Data;
 import jakarta.validation.constraints.*;
 
+/**
+ * OdontologoDTO es una clase de transferencia de datos que representa a un odontólogo.
+ * Contiene validaciones para asegurar que los datos sean correctos.
+ */
 @Data
 public class OdontologoDTO {
     private Long id;

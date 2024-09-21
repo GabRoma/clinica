@@ -8,7 +8,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-
+/**
+ * ViewController es una clase que maneja las solicitudes HTTP para cargar diferentes vistas del sistema.
+ * Utiliza anotaciones de Spring Boot para mapear las rutas a los métodos correspondientes que retornan
+ * los nombres de las plantillas HTML a cargar.
+ */
 @Controller
 public class ViewController {
 

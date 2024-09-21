@@ -10,6 +10,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Collections;
 
+/**
+ * La clase `Usuario` representa la entidad de un usuario en la base de datos.
+ * Implementa la interfaz `UserDetails` de Spring Security para proporcionar
+ * detalles de autenticación y autorización.
+ * Incluye atributos como nombre, nombre de usuario, contraseña, email y rol de usuario.
+ */
 @Getter
 @Setter
 @AllArgsConstructor

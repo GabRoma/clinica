@@ -12,11 +12,17 @@ import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * La clase `PacienteService` proporciona servicios para gestionar pacientes.
+ * Incluye métodos para listar, guardar, obtener y eliminar pacientes.
+ */
 @Service
 public class PacienteService {
 
+    // Logger para registrar información y errores
     private static final Logger logger = LogManager.getLogger(PacienteService.class);
 
+    // Inyección de dependencias
     @Autowired
     private PacienteRepository pacienteRepository;
 
@@ -29,6 +35,7 @@ public class PacienteService {
             logger.info("Listando pacientes");
             List<Paciente> pacientes = pacienteRepository.findAll();
             List<PacienteDTO> listaDTO = new ArrayList<>();
+            // Convertir cada entidad Paciente a DTO y agregar a la lista
             for(Paciente paciente : pacientes){
                 listaDTO.add(mapper.pacienteToDto(paciente));
             }
@@ -43,8 +50,10 @@ public class PacienteService {
     public PacienteDTO guardarPaciente(PacienteDTO pacienteDTO) {
         try {
             logger.info("Guardando paciente: " + pacienteDTO.toString());
+            // Convertir el DTO a entidad y guardar en la base de datos
             Paciente paciente = mapper.dtoToPaciente(pacienteDTO);
             Paciente pacienteGuardado = pacienteRepository.save(paciente);
+            // Convertir la entidad guardada a DTO y devolver
             return mapper.pacienteToDto(pacienteGuardado);
         } catch (Exception e) {
             logger.error("Error al guardar paciente: " + e.getMessage());
@@ -56,8 +65,10 @@ public class PacienteService {
     public PacienteDTO obtenerPaciente(Long id) {
         try {
             logger.info("Obteniendo paciente por ID: " + id);
+            // Buscar el paciente por ID, lanzar excepción si no se encuentra
             Paciente paciente = pacienteRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFoundException("Paciente no encontrado"));
+            // Convertir la entidad a DTO y devolver
             return mapper.pacienteToDto(paciente);
         } catch (ResourceNotFoundException e) {
             logger.error("Paciente no encontrado: " + e.getMessage());
@@ -72,6 +83,7 @@ public class PacienteService {
     public Paciente obtenerEntidadPaciente(Long id) {
         try {
             logger.info("Obteniendo paciente por ID: " + id);
+            // Buscar el paciente por ID, lanzar excepción si no se encuentra
             return pacienteRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFoundException("Paciente no encontrado"));
         } catch (ResourceNotFoundException e) {
@@ -87,6 +99,7 @@ public class PacienteService {
     public void eliminarPaciente(Long id) {
         try {
             logger.info("Eliminando paciente por ID: " + id);
+            // Verificar si el paciente existe antes de eliminar
             if (!pacienteRepository.existsById(id)) {
                 logger.error("Se intentó eliminar un paciente, pero no fue encontrado");
                 throw new ResourceNotFoundException("Paciente no encontrado");

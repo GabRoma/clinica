@@ -6,7 +6,11 @@ import jakarta.validation.constraints.*;
 import java.time.LocalDateTime;
 import com.clinica.odontologica.dto.PacienteDTO;
 import com.clinica.odontologica.dto.OdontologoDTO;
-
+/**
+ * La clase `TurnoDTO` es un Data Transfer Object (DTO) que representa la información de un turno.
+ * Esta clase se utiliza para transferir datos entre las capas de la aplicación.
+ * Incluye validaciones para asegurar que los datos sean correctos antes de ser procesados.
+ */
 @Getter
 @Setter
 @Data
