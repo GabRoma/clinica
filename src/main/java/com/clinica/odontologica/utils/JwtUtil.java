@@ -7,19 +7,25 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @Component
 public class JwtUtil {
 
+    private static final Logger logger = LogManager.getLogger(JwtUtil.class);
+
     private String SECRET_KEY = "clave_secreta";
 
     public String generateToken(String username, String role) {
+        logger.info("Generando token para el usuario: " + username);
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", role);  // Añadir el rol al token
         return createToken(claims, username);
     }
 
     private String createToken(Map<String, Object> claims, String subject) {
+        logger.info("Creando token para el usuario: " + subject);
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(subject)
@@ -55,6 +61,7 @@ public class JwtUtil {
     }
 
     public Boolean validateToken(String token, String username) {
+        logger.info("Validando token para el usuario: " + username);
         final String extractedUsername = extractUsername(token);
         return (extractedUsername.equals(username) && !isTokenExpired(token));
     }
