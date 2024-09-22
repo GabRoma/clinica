@@ -3,6 +3,12 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
 import java.time.LocalDate;
+/**
+ * La clase `Paciente` representa la entidad de un paciente en la base de datos.
+ * Utiliza anotaciones de JPA para mapear sus campos a una tabla de la base de datos.
+ * Incluye atributos como nombre, apellido, cédula, fecha de ingreso, email y domicilio,
+ * con validaciones para asegurar que los datos sean correctos.
+ */
 @Getter
 @Setter
 @AllArgsConstructor

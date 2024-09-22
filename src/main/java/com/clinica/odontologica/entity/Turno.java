@@ -3,6 +3,12 @@ import lombok.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.time.LocalDateTime;
+/**
+ * La clase `Turno` representa la entidad de un turno en la base de datos.
+ * Utiliza anotaciones de JPA para mapear sus campos a una tabla de la base de datos.
+ * Incluye atributos como paciente, odontólogo y fecha del turno, con validaciones
+ * para asegurar que los datos sean correctos.
+ */
 @Getter
 @Setter
 @AllArgsConstructor

@@ -3,7 +3,11 @@ import com.clinica.odontologica.entity.Domicilio;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 import java.time.LocalDate;
-
+/**
+ * La clase `PacienteDTO` es un Data Transfer Object (DTO) que representa la información de un paciente.
+ * Esta clase se utiliza para transferir datos entre las capas de la aplicación.
+ * Incluye validaciones para asegurar que los datos sean correctos antes de ser procesados.
+ */
 @Data
 public class PacienteDTO {
     private Long id;
