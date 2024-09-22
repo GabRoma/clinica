@@ -30,7 +30,7 @@ public class JwtUtil {
      * return El token JWT generado.
      */
     public String generateToken(String username, String role) {
-        logger.info("Generando token para el usuario: " + username);
+        logger.info("Generando token para el usuario: " + username + "con rol: " + role);
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", role);  // Añadir el rol al token
         return createToken(claims, username);

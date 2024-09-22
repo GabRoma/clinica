@@ -14,6 +14,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * La clase `JwtRequestFilter` extiende `OncePerRequestFilter` para asegurar que el filtro se ejecute una vez por solicitud.
@@ -21,6 +23,9 @@ import java.io.IOException;
  */
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
+
+    // Logger para registrar información y errores
+    private static final Logger logger = LogManager.getLogger(JwtRequestFilter.class);
 
     // Inyección de dependencias
     @Autowired
@@ -42,19 +47,22 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
 
+        String jwt = null;
+
         // Obtener el encabezado de autorización de la solicitud
         final String authorizationHeader = request.getHeader("Authorization");
 
         String username = null;
-        String jwt = null;
 
         // Verificar si el encabezado de autorización contiene un token JWT
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             // Extraer el token JWT del encabezado
             jwt = authorizationHeader.substring(7);
+            System.out.println("JWT recibido: " + jwt);
             try {
                 // Extraer el nombre de usuario del token JWT
                 username = jwtUtil.extractUsername(jwt);
+                logger.info("Nombre de usuario extraído del JWT: " + username);
             } catch (Exception e) {
                 logger.error("Error extracting username from JWT", e);
             }
@@ -64,6 +72,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             // Cargar los detalles del usuario utilizando el nombre de usuario
             UserDetails userDetails = this.usuarioService.loadUserByUsername(username);
+            System.out.println("Detalles del usuario cargados: " + userDetails);
 
             // Validar el token JWT
             if (jwtUtil.validateToken(jwt, userDetails.getUsername())) {
@@ -74,9 +83,23 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                         .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 // Establecer la autenticación en el contexto de seguridad
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+                logger.info("Autenticación establecida para el usuario: " + username);
+            } else {
+                logger.warn("Token JWT no válido para el usuario: " + username);
             }
+        } else {
+            logger.warn("Nombre de usuario nulo o autenticación ya establecida");
         }
+
         // Continuar con el siguiente filtro en la cadena
         chain.doFilter(request, response);
     }
+
+//    private String getJwtFromRequest(HttpServletRequest request) {
+//        String bearerToken = request.getHeader("Authorization");
+//        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+//            return bearerToken.substring(7);
+//        }
+//        return null;
+//    }
 }

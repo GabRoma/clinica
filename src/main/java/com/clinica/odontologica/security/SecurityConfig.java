@@ -15,6 +15,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * La clase `SecurityConfig` configura la seguridad de la aplicación utilizando Spring Security.
@@ -23,6 +25,9 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+    // Logger para registrar información y errores
+    private static final Logger logger = LogManager.getLogger(SecurityConfig.class);
 
     // Inyección de dependencias
     @Autowired
@@ -46,6 +51,7 @@ public class SecurityConfig {
      */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        logger.info("Configurando la cadena de filtros de seguridad");
         http.csrf(AbstractHttpConfigurer::disable)  // Deshabilita la protección CSRF
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/", "/index", "/login", "/registrar", "/usuarios/registrar", "/css/**", "/js/**", "/images/**").permitAll()  // Rutas públicas
@@ -59,7 +65,7 @@ public class SecurityConfig {
 
         // Agrega el filtro JWT antes del filtro de autenticación de usuario y contraseña
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
-
+        logger.info("Configuración de seguridad completada");
         return http.build();
     }
 
