@@ -10,25 +10,73 @@ document.getElementById('loginForm')?.addEventListener('submit', async (e) => {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({ username: email, password })
-    });
-
-    if (response.ok) {
-        const { jwt } = await response.json();
-
-        if (localStorage.getItem('jwt')) {
-            console.log('Token existente encontrado. Eliminando...');
-            localStorage.removeItem('jwt');
-        }
-
-        localStorage.setItem('jwt', jwt);
-        console.log('Nuevo token guardado: ' + jwt);
-
-        alert('Bienvenido!');
-
-        // Redirigir a la vista HOME
-        window.location.href = '/home';
-
-    } else {
-        alert('Error al iniciar sesión');
-    }
+    })
+        .then(response => response.json())
+        .then(data => {
+            localStorage.setItem("token", data.jwt); // Almacenar el token
+            // Redirigir al home usando fetchWithAuth
+            navigateWithAuth('/home');
+        })
+        .catch(error => {
+            console.error('Error en la autenticación:', error);
+        });
 });
+
+// Función para obtener el token JWT almacenado
+function getToken() {
+    return localStorage.getItem("token");
+}
+
+// Función fetch personalizada que agrega automáticamente el token JWT en el encabezado de autorización
+async function fetchWithAuth(url, options = {}) {
+    const token = getToken();
+    const headers = options.headers ? options.headers : {};
+    if (token) {
+        headers['Authorization'] = 'Bearer ' + token;
+    }
+    options.headers = headers;
+    return await fetch(url, options);
+}
+
+// Función para manejar la navegación asegurando que el token JWT esté presente
+async function navigateWithAuth(url) {
+    fetchWithAuth(url, {
+        method: 'GET'
+    })
+        .then(response => {
+            if (response.ok) {
+                return response.text(); // O JSON si tu backend responde con datos
+            } else if (response.status === 403) {
+                throw new Error('Acceso denegado: No tienes permiso para esta ruta.');
+            }
+        })
+        .then(htmlContent => {
+            document.body.innerHTML = htmlContent; // Renderizar la nueva vista
+        })
+        .catch(error => {
+            console.error('Error en la navegación:', error);
+        });
+}
+
+// Asignar la función de navegación a los botones del navbar
+document.querySelectorAll('.navbar-link').forEach(button => {
+    button.addEventListener('click', (e) => {
+        e.preventDefault();
+        const url = e.target.getAttribute('href'); // Obtener la URL del enlace
+        navigateWithAuth(url);
+    });
+});
+
+// Manejar cambio de URL manual en el navegador
+window.addEventListener('popstate', (event) => {
+    const url = window.location.pathname; // Obtener la URL actual
+    navigateWithAuth(url); // Navegar usando la función con autorización
+});
+
+// Logout function
+function logout() {
+    localStorage.removeItem('token');
+    window.location.href = '/login';
+}
+
+
