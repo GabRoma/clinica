@@ -17,7 +17,7 @@ public class UsuarioDTO {
 
     @NotBlank(message = "El apellido no puede estar vacío")
     @Size(min = 2, max = 50, message = "El apellido debe tener entre 2 y 50 caracteres")
-    private String username;
+    private String apellido;
 
     private String password;
 

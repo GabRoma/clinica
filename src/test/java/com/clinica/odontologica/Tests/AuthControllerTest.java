@@ -48,11 +48,11 @@ public class AuthControllerTest {
     @BeforeEach
     void setUp() {
         authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setUsername("testuser");
+        authenticationRequest.setUsername("testuser@email.com");
         authenticationRequest.setPassword("password");
 
         // Asignar un rol al usuario
-        userDetails = new User("testuser", "password", Collections.singletonList(() -> "ROLE_USER"));
+        userDetails = new User("testuser@email.com", "password", Collections.singletonList(() -> "ROLE_USER"));
     }
 
     @Test
@@ -61,10 +61,10 @@ public class AuthControllerTest {
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(null);
 
         // Simular que el usuario ha sido cargado correctamente
-        when(usuarioService.loadUserByUsername("testuser")).thenReturn(userDetails);
+        when(usuarioService.loadUserByUsername("testuser@email.com")).thenReturn(userDetails);
 
         // Simular la generación de un token JWT
-        when(jwtUtil.generateToken("testuser", "ROLE_USER")).thenReturn("jwt_token");
+        when(jwtUtil.generateToken("testuser@email.com", "ROLE_USER")).thenReturn("jwt_token");
 
         // Llamar al método a probar
         ResponseEntity<?> response = authController.createAuthenticationToken(authenticationRequest);
@@ -77,8 +77,8 @@ public class AuthControllerTest {
 
         // Verificar que los métodos se llamaron
         verify(authenticationManager, times(1)).authenticate(any(UsernamePasswordAuthenticationToken.class));
-        verify(usuarioService, times(1)).loadUserByUsername("testuser");
-        verify(jwtUtil, times(1)).generateToken("testuser", "ROLE_USER");
+        verify(usuarioService, times(1)).loadUserByUsername("testuser@email.com");
+        verify(jwtUtil, times(1)).generateToken("testuser@email.com", "ROLE_USER");
     }
 
     @Test

@@ -3,7 +3,7 @@ document.getElementById('usuarioForm')?.addEventListener('submit', async (e) => 
     e.preventDefault();
 
     const nombre = document.getElementById('nombre').value;
-    const username = document.getElementById('username').value;
+    const apellido = document.getElementById('apellido').value;
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
     const usuarioRol = document.getElementById('usuarioRol').value;
@@ -15,7 +15,7 @@ document.getElementById('usuarioForm')?.addEventListener('submit', async (e) => 
         },
         body: JSON.stringify({
             nombre,
-            username,
+            apellido,
             email,
             password,
             usuarioRol
