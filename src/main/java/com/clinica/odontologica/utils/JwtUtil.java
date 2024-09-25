@@ -30,7 +30,7 @@ public class JwtUtil {
      * return El token JWT generado.
      */
     public String generateToken(String username, String role) {
-        logger.info("Generando token para el usuario: " + username + "con rol: " + role);
+        logger.info("Generando token para el usuario: " + username + " con rol: " + role);
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", role);  // Añadir el rol al token
         return createToken(claims, username);
@@ -87,7 +87,7 @@ public class JwtUtil {
      * param token El token JWT.
      * return Los claims extraídos.
      */
-    private Claims extractAllClaims(String token) {
+    public Claims extractAllClaims(String token) {
         return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
     }
 
@@ -96,7 +96,7 @@ public class JwtUtil {
      * param token El token JWT.
      * return true si el token ha expirado, false en caso contrario.
      */
-    private Boolean isTokenExpired(String token) {
+    public Boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 

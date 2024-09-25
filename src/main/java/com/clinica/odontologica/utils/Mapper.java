@@ -124,7 +124,7 @@ public class Mapper {
         UsuarioDTO dto = new UsuarioDTO();
         dto.setId(usuario.getId());
         dto.setNombre(usuario.getNombre());
-        dto.setUsername(usuario.getUsername());
+        dto.setApellido(usuario.getApellido());
         dto.setEmail(usuario.getEmail());
         dto.setUsuarioRol(usuario.getUsuarioRol());
         return dto;
@@ -139,7 +139,7 @@ public class Mapper {
         Usuario usuario = new Usuario();
         usuario.setId(dto.getId());
         usuario.setNombre(dto.getNombre());
-        usuario.setUsername(dto.getUsername());
+        usuario.setApellido(dto.getApellido());
         usuario.setPassword(dto.getPassword());
         usuario.setEmail(dto.getEmail());
         usuario.setUsuarioRol(dto.getUsuarioRol());

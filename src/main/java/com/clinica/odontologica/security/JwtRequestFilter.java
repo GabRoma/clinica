@@ -51,6 +51,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         // Obtener el encabezado de autorización de la solicitud
         final String authorizationHeader = request.getHeader("Authorization");
+        System.out.println("Encabezado de autorización: " + authorizationHeader);
 
         String username = null;
 

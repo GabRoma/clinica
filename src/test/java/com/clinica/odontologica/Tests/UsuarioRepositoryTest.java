@@ -26,7 +26,7 @@ public class UsuarioRepositoryTest {
     public void testGuardarYBuscarUsuario() {
         Usuario usuario = new Usuario();
         usuario.setNombre("Juan");
-        usuario.setUsername("juancito");
+        usuario.setApellido("Perez");
         usuario.setEmail("juan@example.com");
         usuario.setPassword("password");
         usuario.setUsuarioRol(UsuarioRol.ROLE_USER);
@@ -43,7 +43,7 @@ public class UsuarioRepositoryTest {
     public void testBuscarUsuarioPorEmail() {
         Usuario usuario = new Usuario();
         usuario.setNombre("Juan");
-        usuario.setUsername("juancito");
+        usuario.setApellido("Perez");
         usuario.setEmail("juan@example.com");
         usuario.setPassword("password");
         usuario.setUsuarioRol(UsuarioRol.ROLE_USER);

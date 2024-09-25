@@ -56,7 +56,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/", "/index", "/login", "/registrar", "/usuarios/registrar", "/css/**", "/js/**", "/images/**").permitAll()  // Rutas públicas
                         .requestMatchers("/home", "/view/turnos", "/turnos").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")  // Rutas accesibles para USER y ADMIN
-                        .requestMatchers("/view/odontologos", "/odontologos", "/pacientes", "/view/pacientes").hasAuthority("ROLE_ADMIN")  // Rutas exclusivas de ADMIN
+                        .requestMatchers("/view/odontologos", "/odontologos", "/pacientes", "/view/pacientes", "/index", "/home").hasAuthority("ROLE_ADMIN")  // Rutas exclusivas de ADMIN
                         .anyRequest().authenticated()  // Cualquier otra solicitud requiere autenticación
                 )
                 .sessionManagement(session -> session

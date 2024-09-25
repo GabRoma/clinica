@@ -47,12 +47,16 @@ public class UsuarioServiceTest {
 
         usuario = new Usuario();
         usuario.setId(1L);
+        usuario.setNombre("Pedro");
+        usuario.setApellido("Gonzalez");
         usuario.setEmail("test@example.com");
         usuario.setPassword("password");
         usuario.setUsuarioRol(role);
 
         usuarioDTO = new UsuarioDTO();
         usuarioDTO.setId(1L);
+        usuarioDTO.setNombre("Pedro");
+        usuarioDTO.setApellido("Gonzalez");
         usuarioDTO.setEmail("test@example.com");
         usuarioDTO.setPassword("password");
         usuarioDTO.setUsuarioRol(role);
